@@ -1,6 +1,8 @@
 <?php
 /**
  * plugin name: plugin learning
+ * Text Domain: translatedomain
+ * Domain Path: /languages
  */
 
 class MyClassPlugin {
@@ -8,6 +10,13 @@ class MyClassPlugin {
         add_action('admin_menu', array($this, 'myPlugin'));
         add_action('admin_init', array($this, 'settings'));
         add_filter('the_content', array($this, 'ifSomethingFn'));
+        add_action('init', array($this, 'languages'));
+    }
+
+    // 加载国际化翻译文件
+    function languages() {
+        load_plugin_textdomain('translatedomain', false,  dirname(plugin_basename(__FILE__)) . '/languages');
+        // 注：用Loco Translate插件进行翻译
     }
 
     function ifSomethingFn($content) {
@@ -35,7 +44,7 @@ class MyClassPlugin {
             },
             $content
         );
-        return $content . ' || Word Count: ' . $wordCount . ' || Strlen: ' . $strlen;
+        return $content . ' || ' . __('Word Count', 'translatedomain') . ': ' . $wordCount . ' || ' . __('Strlen', 'translatedomain') . ': ' . $strlen;
     }
 
 
@@ -119,7 +128,7 @@ class MyClassPlugin {
     }
 
     function myPlugin() {
-        add_options_page('browser cart name', 'sidebar menu name', 'manage_options', 'now-create-page-url-path', array($this, 'output_now_create_page_html'));
+        add_options_page('browser cart name', __('sidebar menu name', 'translatedomain'), 'manage_options', 'now-create-page-url-path', array($this, 'output_now_create_page_html'));
     }
 
     function outputHtml() { ?>

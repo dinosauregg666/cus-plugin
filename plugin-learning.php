@@ -44,7 +44,7 @@ class MyClassPlugin {
             },
             $content
         );
-        return $content . ' || ' . __('Word Count', 'translatedomain') . ': ' . $wordCount . ' || ' . __('Strlen', 'translatedomain') . ': ' . $strlen;
+        return $content . ' || ' . esc_html__('Word Count', 'translatedomain') . ': ' . $wordCount . ' || ' . __('Strlen', 'translatedomain') . ': ' . $strlen;
     }
 
 

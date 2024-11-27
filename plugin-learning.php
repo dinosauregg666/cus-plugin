@@ -7,7 +7,38 @@ class MyClassPlugin {
     function __construct() {
         add_action('admin_menu', array($this, 'myPlugin'));
         add_action('admin_init', array($this, 'settings'));
+        add_filter('the_content', array($this, 'ifSomethingFn'));
     }
+
+    function ifSomethingFn($content) {
+        if (
+                (is_main_query() AND is_single())
+                    AND
+                (get_option('database_field_name_2', '1') OR get_option('database_field_name_3', '1') OR get_option('database_field_name_4', '1'))
+        ) {
+            return $this->createHTML($content);
+        }
+        return $content;
+    }
+
+    function createHTML($content) {
+        if(get_option('database_field_name_2', '1')) {
+            $wordCount = str_word_count(strip_tags($content)); // 统计字数，每个单词为一个字 // strip_tags 去掉html标签
+            $strlen = strlen(strip_tags($content)); // 统计字符数，每个单词为一个字 // strip_tags 去掉html标签
+        }
+
+        // 使用正则表达式进行替换
+        $content = preg_replace_callback(
+            '/geekom mini pc/i',
+            function($matches) {
+                return '<a href="your-link-here" style="color: #009ac5;">' . esc_html($matches[0]) . '</a>'; // esc_html 转义标签为字符串
+            },
+            $content
+        );
+        return $content . ' || Word Count: ' . $wordCount . ' || Strlen: ' . $strlen;
+    }
+
+
     function settings() {
         // 3. 把设置好的东西放到前端页面
         add_settings_section('first_section', null, null, 'now-create-page-url-path');

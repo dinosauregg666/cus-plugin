@@ -21,10 +21,9 @@ class MyClassPlugin {
             'database_field_name',  // 选项名称
             array(
                 'default' => '0', // 设置选项默认值 // 刚开始的default是不会保存到数据库中的，database_field_name
-                'sanitize_callback' => 'sanitize_text_field', // 设置选项数据过滤标准，得到的数据就是过滤后的数据，这里是过滤html标签，得到纯文本
+                'sanitize_callback' => array($this, 'customSanitizeFn'), // 设置选项数据过滤标准，得到的数据就是过滤后的数据，这里是过滤html标签，得到纯文本
             )
         );
-
 
         // 2. 设置前端信息
         add_settings_field('database_field_name_1', 'html form item label name 1', array($this, 'inputHTML'), 'now-create-page-url-path',  'first_section', array('theName' => 'database_field_name_1'));
@@ -77,6 +76,15 @@ class MyClassPlugin {
                 'sanitize_callback' => 'sanitize_text_field', // 设置选项数据过滤标准，得到的数据就是过滤后的数据，这里是过滤html标签，得到纯文本
             )
         );
+    }
+
+    function customSanitizeFn($input) {
+        // $input 前端发送过来的数据
+        if($input != '0' AND $input != '1') {
+            add_settings_error('database_field_name_1', 'database_field_name_1_error', 'database field name 1 error!');
+            return get_option('database_field_name_1'); // 返回修改之前的数据
+        }
+        return $input;
     }
 
     function myPlugin() {
